@@ -32,59 +32,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// GPUResourceInformer provides access to a shared informer and lister for
-// GPUResources.
-type GPUResourceInformer interface {
+// GPUNodeInfoInformer provides access to a shared informer and lister for
+// GPUNodeInfos.
+type GPUNodeInfoInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.GPUResourceLister
+	Lister() v1.GPUNodeInfoLister
 }
 
-type gPUResourceInformer struct {
+type GPUNodeInfoInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewGPUResourceInformer constructs a new informer for GPUResource type.
+// NewGPUNodeInfoInformer constructs a new informer for GPUNodeInfo type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewGPUResourceInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredGPUResourceInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewGPUNodeInfoInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredGPUNodeInfoInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredGPUResourceInformer constructs a new informer for GPUResource type.
+// NewFilteredGPUNodeInfoInformer constructs a new informer for GPUNodeInfo type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredGPUResourceInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredGPUNodeInfoInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.NvidiaV1().GPUResources(namespace).List(context.TODO(), options)
+				return client.NvidiaV1().GPUNodeInfos(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.NvidiaV1().GPUResources(namespace).Watch(context.TODO(), options)
+				return client.NvidiaV1().GPUNodeInfos(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&nvidiav1.GPUResource{},
+		&nvidiav1.GPUNodeInfo{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *gPUResourceInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredGPUResourceInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *GPUNodeInfoInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredGPUNodeInfoInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *gPUResourceInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&nvidiav1.GPUResource{}, f.defaultInformer)
+func (f *GPUNodeInfoInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&nvidiav1.GPUNodeInfo{}, f.defaultInformer)
 }
 
-func (f *gPUResourceInformer) Lister() v1.GPUResourceLister {
-	return v1.NewGPUResourceLister(f.Informer().GetIndexer())
+func (f *GPUNodeInfoInformer) Lister() v1.GPUNodeInfoLister {
+	return v1.NewGPUNodeInfoLister(f.Informer().GetIndexer())
 }

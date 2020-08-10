@@ -26,7 +26,7 @@ import (
 
 type NvidiaV1Interface interface {
 	RESTClient() rest.Interface
-	GPUResourcesGetter
+	GPUNodeInfosGetter
 }
 
 // NvidiaV1Client is used to interact with features provided by the nvidia.segma.tech group.
@@ -34,8 +34,8 @@ type NvidiaV1Client struct {
 	restClient rest.Interface
 }
 
-func (c *NvidiaV1Client) GPUResources(namespace string) GPUResourceInterface {
-	return newGPUResources(c, namespace)
+func (c *NvidiaV1Client) GPUNodeInfos(namespace string) GPUNodeInfoInterface {
+	return newGPUNodeInfos(c, namespace)
 }
 
 // NewForConfig creates a new NvidiaV1Client for the given config.

@@ -28,8 +28,8 @@ type FakeNvidiaV1 struct {
 	*testing.Fake
 }
 
-func (c *FakeNvidiaV1) GPUResources(namespace string) v1.GPUResourceInterface {
-	return &FakeGPUResources{c, namespace}
+func (c *FakeNvidiaV1) GPUNodeInfos(namespace string) v1.GPUNodeInfoInterface {
+	return &FakeGPUNodeInfos{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

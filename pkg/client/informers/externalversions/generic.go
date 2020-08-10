@@ -53,8 +53,8 @@ func (f *genericInformer) Lister() cache.GenericLister {
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
 	// Group=nvidia.segma.tech, Version=v1
-	case v1.SchemeGroupVersion.WithResource("gpuresources"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Nvidia().V1().GPUResources().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("GPUNodeInfos"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Nvidia().V1().GPUNodeInfos().Informer()}, nil
 
 	}
 

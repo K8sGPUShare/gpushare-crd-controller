@@ -8,25 +8,24 @@ import (
 // +genclient:noStatus
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type GPUResource struct {
+type GPUNodeInfo struct {
 	metav1.TypeMeta `json:",inline"`
 
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec GPUResourceSpec `json:"spec"`
+	Spec GPUNodeInfoSpec `json:"spec"`
 }
 
-type GPUResourceSpec struct {
-	Node        string `json:"node"`
-	Device      string `json:"device"`
-	Capacity    string `json:"capacity"`
-	Allocatable string `json:"allocatable"`
+type GPUNodeInfoSpec struct {
+	Node    string `json:"node"`
+	Service string `json:"service"`
+	Address string `json:"address"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type GPUResourceList struct {
+type GPUNodeInfoList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
 
-	Items []GPUResource `json:"items"`
+	Items []GPUNodeInfo `json:"items"`
 }

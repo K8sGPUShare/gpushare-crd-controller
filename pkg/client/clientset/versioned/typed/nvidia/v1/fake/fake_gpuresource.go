@@ -30,31 +30,31 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-// FakeGPUResources implements GPUResourceInterface
-type FakeGPUResources struct {
+// FakeGPUNodeInfos implements GPUNodeInfoInterface
+type FakeGPUNodeInfos struct {
 	Fake *FakeNvidiaV1
 	ns   string
 }
 
-var gpuresourcesResource = schema.GroupVersionResource{Group: "nvidia.segma.tech", Version: "v1", Resource: "gpuresources"}
+var GPUNodeInfosResource = schema.GroupVersionResource{Group: "nvidia.segma.tech", Version: "v1", Resource: "GPUNodeInfos"}
 
-var gpuresourcesKind = schema.GroupVersionKind{Group: "nvidia.segma.tech", Version: "v1", Kind: "GPUResource"}
+var GPUNodeInfosKind = schema.GroupVersionKind{Group: "nvidia.segma.tech", Version: "v1", Kind: "GPUNodeInfo"}
 
-// Get takes name of the gPUResource, and returns the corresponding gPUResource object, and an error if there is any.
-func (c *FakeGPUResources) Get(ctx context.Context, name string, options v1.GetOptions) (result *nvidiav1.GPUResource, err error) {
+// Get takes name of the GPUNodeInfo, and returns the corresponding GPUNodeInfo object, and an error if there is any.
+func (c *FakeGPUNodeInfos) Get(ctx context.Context, name string, options v1.GetOptions) (result *nvidiav1.GPUNodeInfo, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(gpuresourcesResource, c.ns, name), &nvidiav1.GPUResource{})
+		Invokes(testing.NewGetAction(GPUNodeInfosResource, c.ns, name), &nvidiav1.GPUNodeInfo{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*nvidiav1.GPUResource), err
+	return obj.(*nvidiav1.GPUNodeInfo), err
 }
 
-// List takes label and field selectors, and returns the list of GPUResources that match those selectors.
-func (c *FakeGPUResources) List(ctx context.Context, opts v1.ListOptions) (result *nvidiav1.GPUResourceList, err error) {
+// List takes label and field selectors, and returns the list of GPUNodeInfos that match those selectors.
+func (c *FakeGPUNodeInfos) List(ctx context.Context, opts v1.ListOptions) (result *nvidiav1.GPUNodeInfoList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(gpuresourcesResource, gpuresourcesKind, c.ns, opts), &nvidiav1.GPUResourceList{})
+		Invokes(testing.NewListAction(GPUNodeInfosResource, GPUNodeInfosKind, c.ns, opts), &nvidiav1.GPUNodeInfoList{})
 
 	if obj == nil {
 		return nil, err
@@ -64,8 +64,8 @@ func (c *FakeGPUResources) List(ctx context.Context, opts v1.ListOptions) (resul
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &nvidiav1.GPUResourceList{ListMeta: obj.(*nvidiav1.GPUResourceList).ListMeta}
-	for _, item := range obj.(*nvidiav1.GPUResourceList).Items {
+	list := &nvidiav1.GPUNodeInfoList{ListMeta: obj.(*nvidiav1.GPUNodeInfoList).ListMeta}
+	for _, item := range obj.(*nvidiav1.GPUNodeInfoList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -73,58 +73,58 @@ func (c *FakeGPUResources) List(ctx context.Context, opts v1.ListOptions) (resul
 	return list, err
 }
 
-// Watch returns a watch.Interface that watches the requested gPUResources.
-func (c *FakeGPUResources) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested GPUNodeInfos.
+func (c *FakeGPUNodeInfos) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(gpuresourcesResource, c.ns, opts))
+		InvokesWatch(testing.NewWatchAction(GPUNodeInfosResource, c.ns, opts))
 
 }
 
-// Create takes the representation of a gPUResource and creates it.  Returns the server's representation of the gPUResource, and an error, if there is any.
-func (c *FakeGPUResources) Create(ctx context.Context, gPUResource *nvidiav1.GPUResource, opts v1.CreateOptions) (result *nvidiav1.GPUResource, err error) {
+// Create takes the representation of a GPUNodeInfo and creates it.  Returns the server's representation of the GPUNodeInfo, and an error, if there is any.
+func (c *FakeGPUNodeInfos) Create(ctx context.Context, GPUNodeInfo *nvidiav1.GPUNodeInfo, opts v1.CreateOptions) (result *nvidiav1.GPUNodeInfo, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(gpuresourcesResource, c.ns, gPUResource), &nvidiav1.GPUResource{})
+		Invokes(testing.NewCreateAction(GPUNodeInfosResource, c.ns, GPUNodeInfo), &nvidiav1.GPUNodeInfo{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*nvidiav1.GPUResource), err
+	return obj.(*nvidiav1.GPUNodeInfo), err
 }
 
-// Update takes the representation of a gPUResource and updates it. Returns the server's representation of the gPUResource, and an error, if there is any.
-func (c *FakeGPUResources) Update(ctx context.Context, gPUResource *nvidiav1.GPUResource, opts v1.UpdateOptions) (result *nvidiav1.GPUResource, err error) {
+// Update takes the representation of a GPUNodeInfo and updates it. Returns the server's representation of the GPUNodeInfo, and an error, if there is any.
+func (c *FakeGPUNodeInfos) Update(ctx context.Context, GPUNodeInfo *nvidiav1.GPUNodeInfo, opts v1.UpdateOptions) (result *nvidiav1.GPUNodeInfo, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(gpuresourcesResource, c.ns, gPUResource), &nvidiav1.GPUResource{})
+		Invokes(testing.NewUpdateAction(GPUNodeInfosResource, c.ns, GPUNodeInfo), &nvidiav1.GPUNodeInfo{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*nvidiav1.GPUResource), err
+	return obj.(*nvidiav1.GPUNodeInfo), err
 }
 
-// Delete takes name of the gPUResource and deletes it. Returns an error if one occurs.
-func (c *FakeGPUResources) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+// Delete takes name of the GPUNodeInfo and deletes it. Returns an error if one occurs.
+func (c *FakeGPUNodeInfos) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteAction(gpuresourcesResource, c.ns, name), &nvidiav1.GPUResource{})
+		Invokes(testing.NewDeleteAction(GPUNodeInfosResource, c.ns, name), &nvidiav1.GPUNodeInfo{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeGPUResources) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(gpuresourcesResource, c.ns, listOpts)
+func (c *FakeGPUNodeInfos) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(GPUNodeInfosResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &nvidiav1.GPUResourceList{})
+	_, err := c.Fake.Invokes(action, &nvidiav1.GPUNodeInfoList{})
 	return err
 }
 
-// Patch applies the patch and returns the patched gPUResource.
-func (c *FakeGPUResources) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *nvidiav1.GPUResource, err error) {
+// Patch applies the patch and returns the patched GPUNodeInfo.
+func (c *FakeGPUNodeInfos) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *nvidiav1.GPUNodeInfo, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(gpuresourcesResource, c.ns, name, pt, data, subresources...), &nvidiav1.GPUResource{})
+		Invokes(testing.NewPatchSubresourceAction(GPUNodeInfosResource, c.ns, name, pt, data, subresources...), &nvidiav1.GPUNodeInfo{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*nvidiav1.GPUResource), err
+	return obj.(*nvidiav1.GPUNodeInfo), err
 }

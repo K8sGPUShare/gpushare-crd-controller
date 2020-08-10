@@ -30,45 +30,45 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-// GPUResourcesGetter has a method to return a GPUResourceInterface.
+// GPUNodeInfosGetter has a method to return a GPUNodeInfoInterface.
 // A group's client should implement this interface.
-type GPUResourcesGetter interface {
-	GPUResources(namespace string) GPUResourceInterface
+type GPUNodeInfosGetter interface {
+	GPUNodeInfos(namespace string) GPUNodeInfoInterface
 }
 
-// GPUResourceInterface has methods to work with GPUResource resources.
-type GPUResourceInterface interface {
-	Create(ctx context.Context, gPUResource *v1.GPUResource, opts metav1.CreateOptions) (*v1.GPUResource, error)
-	Update(ctx context.Context, gPUResource *v1.GPUResource, opts metav1.UpdateOptions) (*v1.GPUResource, error)
+// GPUNodeInfoInterface has methods to work with GPUNodeInfo resources.
+type GPUNodeInfoInterface interface {
+	Create(ctx context.Context, GPUNodeInfo *v1.GPUNodeInfo, opts metav1.CreateOptions) (*v1.GPUNodeInfo, error)
+	Update(ctx context.Context, GPUNodeInfo *v1.GPUNodeInfo, opts metav1.UpdateOptions) (*v1.GPUNodeInfo, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
-	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.GPUResource, error)
-	List(ctx context.Context, opts metav1.ListOptions) (*v1.GPUResourceList, error)
+	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.GPUNodeInfo, error)
+	List(ctx context.Context, opts metav1.ListOptions) (*v1.GPUNodeInfoList, error)
 	Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error)
-	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.GPUResource, err error)
-	GPUResourceExpansion
+	Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.GPUNodeInfo, err error)
+	GPUNodeInfoExpansion
 }
 
-// gPUResources implements GPUResourceInterface
-type gPUResources struct {
+// GPUNodeInfos implements GPUNodeInfoInterface
+type GPUNodeInfos struct {
 	client rest.Interface
 	ns     string
 }
 
-// newGPUResources returns a GPUResources
-func newGPUResources(c *NvidiaV1Client, namespace string) *gPUResources {
-	return &gPUResources{
+// newGPUNodeInfos returns a GPUNodeInfos
+func newGPUNodeInfos(c *NvidiaV1Client, namespace string) *GPUNodeInfos {
+	return &GPUNodeInfos{
 		client: c.RESTClient(),
 		ns:     namespace,
 	}
 }
 
-// Get takes name of the gPUResource, and returns the corresponding gPUResource object, and an error if there is any.
-func (c *gPUResources) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.GPUResource, err error) {
-	result = &v1.GPUResource{}
+// Get takes name of the GPUNodeInfo, and returns the corresponding GPUNodeInfo object, and an error if there is any.
+func (c *GPUNodeInfos) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.GPUNodeInfo, err error) {
+	result = &v1.GPUNodeInfo{}
 	err = c.client.Get().
 		Namespace(c.ns).
-		Resource("gpuresources").
+		Resource("GPUNodeInfos").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
 		Do(ctx).
@@ -76,16 +76,16 @@ func (c *gPUResources) Get(ctx context.Context, name string, options metav1.GetO
 	return
 }
 
-// List takes label and field selectors, and returns the list of GPUResources that match those selectors.
-func (c *gPUResources) List(ctx context.Context, opts metav1.ListOptions) (result *v1.GPUResourceList, err error) {
+// List takes label and field selectors, and returns the list of GPUNodeInfos that match those selectors.
+func (c *GPUNodeInfos) List(ctx context.Context, opts metav1.ListOptions) (result *v1.GPUNodeInfoList, err error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
 	}
-	result = &v1.GPUResourceList{}
+	result = &v1.GPUNodeInfoList{}
 	err = c.client.Get().
 		Namespace(c.ns).
-		Resource("gpuresources").
+		Resource("GPUNodeInfos").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Do(ctx).
@@ -93,8 +93,8 @@ func (c *gPUResources) List(ctx context.Context, opts metav1.ListOptions) (resul
 	return
 }
 
-// Watch returns a watch.Interface that watches the requested gPUResources.
-func (c *gPUResources) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
+// Watch returns a watch.Interface that watches the requested GPUNodeInfos.
+func (c *GPUNodeInfos) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	var timeout time.Duration
 	if opts.TimeoutSeconds != nil {
 		timeout = time.Duration(*opts.TimeoutSeconds) * time.Second
@@ -102,44 +102,44 @@ func (c *gPUResources) Watch(ctx context.Context, opts metav1.ListOptions) (watc
 	opts.Watch = true
 	return c.client.Get().
 		Namespace(c.ns).
-		Resource("gpuresources").
+		Resource("GPUNodeInfos").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Watch(ctx)
 }
 
-// Create takes the representation of a gPUResource and creates it.  Returns the server's representation of the gPUResource, and an error, if there is any.
-func (c *gPUResources) Create(ctx context.Context, gPUResource *v1.GPUResource, opts metav1.CreateOptions) (result *v1.GPUResource, err error) {
-	result = &v1.GPUResource{}
+// Create takes the representation of a GPUNodeInfo and creates it.  Returns the server's representation of the GPUNodeInfo, and an error, if there is any.
+func (c *GPUNodeInfos) Create(ctx context.Context, GPUNodeInfo *v1.GPUNodeInfo, opts metav1.CreateOptions) (result *v1.GPUNodeInfo, err error) {
+	result = &v1.GPUNodeInfo{}
 	err = c.client.Post().
 		Namespace(c.ns).
-		Resource("gpuresources").
+		Resource("GPUNodeInfos").
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(gPUResource).
+		Body(GPUNodeInfo).
 		Do(ctx).
 		Into(result)
 	return
 }
 
-// Update takes the representation of a gPUResource and updates it. Returns the server's representation of the gPUResource, and an error, if there is any.
-func (c *gPUResources) Update(ctx context.Context, gPUResource *v1.GPUResource, opts metav1.UpdateOptions) (result *v1.GPUResource, err error) {
-	result = &v1.GPUResource{}
+// Update takes the representation of a GPUNodeInfo and updates it. Returns the server's representation of the GPUNodeInfo, and an error, if there is any.
+func (c *GPUNodeInfos) Update(ctx context.Context, GPUNodeInfo *v1.GPUNodeInfo, opts metav1.UpdateOptions) (result *v1.GPUNodeInfo, err error) {
+	result = &v1.GPUNodeInfo{}
 	err = c.client.Put().
 		Namespace(c.ns).
-		Resource("gpuresources").
-		Name(gPUResource.Name).
+		Resource("GPUNodeInfos").
+		Name(GPUNodeInfo.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(gPUResource).
+		Body(GPUNodeInfo).
 		Do(ctx).
 		Into(result)
 	return
 }
 
-// Delete takes name of the gPUResource and deletes it. Returns an error if one occurs.
-func (c *gPUResources) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
+// Delete takes name of the GPUNodeInfo and deletes it. Returns an error if one occurs.
+func (c *GPUNodeInfos) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	return c.client.Delete().
 		Namespace(c.ns).
-		Resource("gpuresources").
+		Resource("GPUNodeInfos").
 		Name(name).
 		Body(&opts).
 		Do(ctx).
@@ -147,14 +147,14 @@ func (c *gPUResources) Delete(ctx context.Context, name string, opts metav1.Dele
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *gPUResources) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
+func (c *GPUNodeInfos) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	var timeout time.Duration
 	if listOpts.TimeoutSeconds != nil {
 		timeout = time.Duration(*listOpts.TimeoutSeconds) * time.Second
 	}
 	return c.client.Delete().
 		Namespace(c.ns).
-		Resource("gpuresources").
+		Resource("GPUNodeInfos").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Body(&opts).
@@ -162,12 +162,12 @@ func (c *gPUResources) DeleteCollection(ctx context.Context, opts metav1.DeleteO
 		Error()
 }
 
-// Patch applies the patch and returns the patched gPUResource.
-func (c *gPUResources) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.GPUResource, err error) {
-	result = &v1.GPUResource{}
+// Patch applies the patch and returns the patched GPUNodeInfo.
+func (c *GPUNodeInfos) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.GPUNodeInfo, err error) {
+	result = &v1.GPUNodeInfo{}
 	err = c.client.Patch(pt).
 		Namespace(c.ns).
-		Resource("gpuresources").
+		Resource("GPUNodeInfos").
 		Name(name).
 		SubResource(subresources...).
 		VersionedParams(&opts, scheme.ParameterCodec).

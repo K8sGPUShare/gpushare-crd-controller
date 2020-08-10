@@ -25,75 +25,75 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-// GPUResourceLister helps list GPUResources.
+// GPUNodeInfoLister helps list GPUNodeInfos.
 // All objects returned here must be treated as read-only.
-type GPUResourceLister interface {
-	// List lists all GPUResources in the indexer.
+type GPUNodeInfoLister interface {
+	// List lists all GPUNodeInfos in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.GPUResource, err error)
-	// GPUResources returns an object that can list and get GPUResources.
-	GPUResources(namespace string) GPUResourceNamespaceLister
-	GPUResourceListerExpansion
+	List(selector labels.Selector) (ret []*v1.GPUNodeInfo, err error)
+	// GPUNodeInfos returns an object that can list and get GPUNodeInfos.
+	GPUNodeInfos(namespace string) GPUNodeInfoNamespaceLister
+	GPUNodeInfoListerExpansion
 }
 
-// gPUResourceLister implements the GPUResourceLister interface.
-type gPUResourceLister struct {
+// GPUNodeInfoLister implements the GPUNodeInfoLister interface.
+type GPUNodeInfoLister struct {
 	indexer cache.Indexer
 }
 
-// NewGPUResourceLister returns a new GPUResourceLister.
-func NewGPUResourceLister(indexer cache.Indexer) GPUResourceLister {
-	return &gPUResourceLister{indexer: indexer}
+// NewGPUNodeInfoLister returns a new GPUNodeInfoLister.
+func NewGPUNodeInfoLister(indexer cache.Indexer) GPUNodeInfoLister {
+	return &GPUNodeInfoLister{indexer: indexer}
 }
 
-// List lists all GPUResources in the indexer.
-func (s *gPUResourceLister) List(selector labels.Selector) (ret []*v1.GPUResource, err error) {
+// List lists all GPUNodeInfos in the indexer.
+func (s *GPUNodeInfoLister) List(selector labels.Selector) (ret []*v1.GPUNodeInfo, err error) {
 	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.GPUResource))
+		ret = append(ret, m.(*v1.GPUNodeInfo))
 	})
 	return ret, err
 }
 
-// GPUResources returns an object that can list and get GPUResources.
-func (s *gPUResourceLister) GPUResources(namespace string) GPUResourceNamespaceLister {
-	return gPUResourceNamespaceLister{indexer: s.indexer, namespace: namespace}
+// GPUNodeInfos returns an object that can list and get GPUNodeInfos.
+func (s *GPUNodeInfoLister) GPUNodeInfos(namespace string) GPUNodeInfoNamespaceLister {
+	return GPUNodeInfoNamespaceLister{indexer: s.indexer, namespace: namespace}
 }
 
-// GPUResourceNamespaceLister helps list and get GPUResources.
+// GPUNodeInfoNamespaceLister helps list and get GPUNodeInfos.
 // All objects returned here must be treated as read-only.
-type GPUResourceNamespaceLister interface {
-	// List lists all GPUResources in the indexer for a given namespace.
+type GPUNodeInfoNamespaceLister interface {
+	// List lists all GPUNodeInfos in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.GPUResource, err error)
-	// Get retrieves the GPUResource from the indexer for a given namespace and name.
+	List(selector labels.Selector) (ret []*v1.GPUNodeInfo, err error)
+	// Get retrieves the GPUNodeInfo from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.GPUResource, error)
-	GPUResourceNamespaceListerExpansion
+	Get(name string) (*v1.GPUNodeInfo, error)
+	GPUNodeInfoNamespaceListerExpansion
 }
 
-// gPUResourceNamespaceLister implements the GPUResourceNamespaceLister
+// GPUNodeInfoNamespaceLister implements the GPUNodeInfoNamespaceLister
 // interface.
-type gPUResourceNamespaceLister struct {
+type GPUNodeInfoNamespaceLister struct {
 	indexer   cache.Indexer
 	namespace string
 }
 
-// List lists all GPUResources in the indexer for a given namespace.
-func (s gPUResourceNamespaceLister) List(selector labels.Selector) (ret []*v1.GPUResource, err error) {
+// List lists all GPUNodeInfos in the indexer for a given namespace.
+func (s GPUNodeInfoNamespaceLister) List(selector labels.Selector) (ret []*v1.GPUNodeInfo, err error) {
 	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.GPUResource))
+		ret = append(ret, m.(*v1.GPUNodeInfo))
 	})
 	return ret, err
 }
 
-// Get retrieves the GPUResource from the indexer for a given namespace and name.
-func (s gPUResourceNamespaceLister) Get(name string) (*v1.GPUResource, error) {
+// Get retrieves the GPUNodeInfo from the indexer for a given namespace and name.
+func (s GPUNodeInfoNamespaceLister) Get(name string) (*v1.GPUNodeInfo, error) {
 	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
 	if err != nil {
 		return nil, err
 	}
 	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("gpuresource"), name)
+		return nil, errors.NewNotFound(v1.Resource("GPUNodeInfo"), name)
 	}
-	return obj.(*v1.GPUResource), nil
+	return obj.(*v1.GPUNodeInfo), nil
 }

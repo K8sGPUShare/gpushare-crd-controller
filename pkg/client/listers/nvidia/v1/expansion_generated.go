@@ -18,10 +18,10 @@ limitations under the License.
 
 package v1
 
-// GPUResourceListerExpansion allows custom methods to be added to
-// GPUResourceLister.
-type GPUResourceListerExpansion interface{}
+// GPUNodeInfoListerExpansion allows custom methods to be added to
+// GPUNodeInfoLister.
+type GPUNodeInfoListerExpansion interface{}
 
-// GPUResourceNamespaceListerExpansion allows custom methods to be added to
-// GPUResourceNamespaceLister.
-type GPUResourceNamespaceListerExpansion interface{}
+// GPUNodeInfoNamespaceListerExpansion allows custom methods to be added to
+// GPUNodeInfoNamespaceLister.
+type GPUNodeInfoNamespaceListerExpansion interface{}

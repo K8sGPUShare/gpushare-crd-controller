@@ -28,8 +28,8 @@ func Kind(kind string) schema.GroupKind {
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(
 		SchemeGroupVersion,
-		&GPUResource{},
-		&GPUResourceList{},
+		&GPUNodeInfo{},
+		&GPUNodeInfoList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
